@@ -3,47 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Тэст па рамантызме</title>
+<title>Рамантызм — тэст</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#eef4ff,#f8f5ff);color:#202536}
-.container{max-width:850px;margin:0 auto;padding:28px 16px 50px}
-.card{background:#fff;border-radius:22px;padding:28px;box-shadow:0 10px 35px rgba(30,40,80,.12)}
-h1{margin-top:0;font-size:30px;line-height:1.2}
-.subtitle{color:#667085;margin-bottom:28px}
-.question{padding:20px 0;border-top:1px solid #e8eaf0}
-.question:first-of-type{border-top:0}
-.question h2{font-size:19px;margin:0 0 14px}
-label{display:block;border:1px solid #dfe3eb;border-radius:12px;padding:12px 14px;margin:9px 0;cursor:pointer;transition:.15s}
-label:hover{background:#f5f7ff;border-color:#8b9cff}
-label.selected{background:#eef1ff;border-color:#5267dc}
-input{margin-right:10px}
-button{width:100%;border:0;border-radius:14px;padding:15px;font-size:17px;font-weight:700;background:#4f63d8;color:white;cursor:pointer;margin-top:18px}
-button:hover{background:#4053c3}
+:root{--bg:#07070b;--card:#101017;--purple:#8b5cf6;--purple2:#6d28d9;--text:#f5f3ff;--muted:#a7a1b8;--border:#272333}
+body{
+  margin:0; min-height:100vh; font-family:Arial,sans-serif;
+  background:radial-gradient(circle at 50% 0%,#21113d 0%,#0d0915 30%,#07070b 65%);
+  color:var(--text); display:flex; align-items:center; justify-content:center;
+}
+.container{width:min(760px,100%);padding:22px}
+.card{
+  background:rgba(16,16,23,.96); border:1px solid var(--border);
+  border-radius:24px; padding:34px; box-shadow:0 20px 70px rgba(88,35,170,.22);
+}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}
+.badge{color:#c4b5fd;font-size:14px;font-weight:700}
+.counter{color:var(--muted);font-size:14px}
+.progress{height:5px;background:#211d2b;border-radius:99px;overflow:hidden;margin:0 0 34px}
+.progress div{height:100%;background:linear-gradient(90deg,var(--purple2),var(--purple));transition:width .35s}
+h1{font-size:30px;line-height:1.2;margin:0 0 15px}
+.question{font-size:24px;line-height:1.4;margin:0 0 25px}
+.answers{display:grid;gap:12px}
+.answer{
+  width:100%; text-align:left; padding:17px 18px; border-radius:15px;
+  border:1px solid #302a3d; background:#15131d; color:var(--text);
+  font-size:16px; cursor:pointer; transition:.18s;
+}
+.answer:hover{border-color:var(--purple);background:#1b1628;transform:translateY(-1px)}
+.answer.correct{border-color:#7c3aed;background:#241344}
+.answer.wrong{border-color:#a855f7;background:#251426}
+.answer:disabled{cursor:default;transform:none}
+.next{
+  margin-top:20px;width:100%;padding:15px;border:0;border-radius:14px;
+  background:linear-gradient(90deg,var(--purple2),var(--purple));color:white;
+  font-size:17px;font-weight:700;cursor:pointer;display:none;
+}
+.next:hover{filter:brightness(1.1)}
 .result{text-align:center}
-.score{font-size:48px;font-weight:800;margin:15px 0}
-.small{color:#667085}
-.error{color:#b42318;margin-top:12px;font-weight:600}
-.progress{height:8px;background:#e9ecf5;border-radius:99px;overflow:hidden;margin:18px 0 25px}
-.progress div{height:100%;width:100%;background:#4f63d8}
-.review{text-align:left;margin-top:25px}
-.review-item{padding:14px;border-radius:12px;margin:10px 0;background:#f7f8fb}
-.correct{border-left:5px solid #2e9b63}
-.wrong{border-left:5px solid #c43d3d}
-@media(max-width:600px){.card{padding:20px}h1{font-size:24px}.question h2{font-size:17px}}
+.result h2{font-size:30px;margin-top:0}
+.score{font-size:58px;font-weight:800;color:#c4b5fd;margin:20px 0}
+.result p{color:var(--muted);font-size:17px}
+.restart{display:block;margin-top:25px;text-decoration:none;text-align:center}
+@media(max-width:600px){
+  .card{padding:23px;border-radius:20px}
+  h1{font-size:25px}.question{font-size:20px}
+  .answer{font-size:15px;padding:15px}
+}
 </style>
 </head>
 <body>
-<div class="container">
-<div class="card" id="app"></div>
-</div>
+<div class="container"><div class="card" id="app"></div></div>
 
 <script>
 const questions = [
 {q:"Дзе рамантызм як літаратурны напрамак сцвердзіў свае пазіцыі ў канцы XVIII стагоддзя?",o:["У Заходняй Еўропе","У Паўночнай Амерыцы","У Старажытнай Грэцыі","Толькі ў Беларусі"],a:0},
 {q:"З наступствамі якой падзеі звязваецца ўзнікненне рамантызму ў тэксце?",o:["Французскай рэвалюцыі","Прамысловай рэвалюцыі ў Англіі","Кастрычніцкай рэвалюцыі","Першай сусветнай вайны"],a:0},
-{q:"Што, паводле тэксту, адначасова з расчараваннем у выніках рэвалюцыі ўзнікла ў адносінах да магчымасцей чалавечага розуму?",o:["Расчараванне","Поўнае захапленне","Бязмежная ўпэўненасць","Абыякавасць"],a:0},
-{q:"Які прынцып быў супрацьпастаўлены рамантызмам рацыяналізму Асветніцтва?",o:["Ірацыяналізм","Рэалізм","Класіцызм","Сентыменталізм"],a:0},
+{q:"Што, паводле тэксту, узнікла ў адносінах да магчымасцей чалавечага розуму пасля расчаравання ў выніках рэвалюцыі?",o:["Расчараванне","Поўнае захапленне","Бязмежная ўпэўненасць","Абыякавасць"],a:0},
+{q:"Які прынцып рамантызм супрацьпаставіў рацыяналізму Асветніцтва?",o:["Ірацыяналізм","Рэалізм","Класіцызм","Сентыменталізм"],a:0},
 {q:"Што рамантызм прынёс у літаратуру як новы мастацкі метад?",o:["Прынцып індывідуальнасці і самабытнасці творчасці","Адмову ад пачуццяў","Толькі дакладнае апісанне фактаў","Адмову ад гісторыі"],a:0},
 {q:"Што з'яўляецца адной з характэрных рыс рамантызму паводле тэксту?",o:["Культ пачуццяў","Поўнае падпарадкаванне героя грамадству","Адмова ад фантазіі","Перавага толькі навуковай тэматыкі"],a:0},
 {q:"Да чаго рамантыкі праяўлялі асаблівую цікавасць?",o:["Да гісторыі і фальклору","Толькі да матэматыкі","Толькі да палітычных дакументаў","Да тэхнічных інструкцый"],a:0},
@@ -57,58 +74,71 @@ const questions = [
 {q:"Якая тэма асабліва звязана з рамантызмам у прыведзеным тэксце?",o:["Непрыманне будзённасці жыцця","Поўнае прыняцце будзённасці","Адмова ад індывідуальнасці","Адмова ад гістарычнай тэматыкі"],a:0}
 ];
 
-function renderTest(){
-  let h=`<h1>Тэст: рамантызм у еўрапейскім і беларускім мастацтве слова</h1>
-  <p class="subtitle">15 пытанняў па матэрыяле падручніка. Выберыце адзін правільны адказ у кожным пытанні.</p>
-  <div class="progress"><div></div></div><form id="quiz">`;
-  questions.forEach((x,i)=>{
-    h+=`<div class="question"><h2>${i+1}. ${x.q}</h2>`;
-    x.o.forEach((op,j)=>{
-      h+=`<label><input type="radio" name="q${i}" value="${j}"> ${op}</label>`;
-    });
-    h+=`</div>`;
+let quiz=[], current=0, score=0, locked=false;
+
+function shuffle(arr){return [...arr].sort(()=>Math.random()-0.5)}
+
+function start(){
+  // Новы парадак пытанняў і адказаў пры кожным новым праходжанні.
+  quiz=shuffle(questions).map(x=>{
+    const options=x.o.map((text,index)=>({text,index}));
+    const shuffled=shuffle(options);
+    return {...x,o:shuffled.map(v=>v.text),a:shuffled.findIndex(v=>v.index===x.a)};
   });
-  h+=`<button type="submit">Завяршыць тэст</button><div id="err" class="error"></div></form>`;
-  document.getElementById("app").innerHTML=h;
-  document.querySelectorAll("label").forEach(l=>{
-    l.addEventListener("click",()=> {
-      l.parentElement.querySelectorAll("label").forEach(x=>x.classList.remove("selected"));
-      l.classList.add("selected");
-    });
-  });
-  document.getElementById("quiz").addEventListener("submit", finish);
+  current=0; score=0; locked=false; showQuestion();
 }
 
-function finish(e){
-  e.preventDefault();
-  let score=0, answers=[];
-  for(let i=0;i<questions.length;i++){
-    const el=document.querySelector(`input[name="q${i}"]:checked`);
-    if(!el){
-      document.getElementById("err").textContent="Калі ласка, адкажыце на ўсе пытанні.";
-      document.querySelectorAll("input")[i*4]?.scrollIntoView({behavior:"smooth",block:"center"});
-      return;
-    }
-    const val=Number(el.value); answers.push(val);
-    if(val===questions[i].a) score++;
-  }
-  const percent=Math.round(score/questions.length*100);
-  let msg=percent===100?"Выдатны вынік!":percent>=80?"Вельмі добры вынік!":percent>=60?"Добры вынік. Можна яшчэ раз паўтарыць матэрыял.":"Паспрабуйце яшчэ раз і паўтарыце асноўныя паняцці.";
-  let review="";
-  questions.forEach((x,i)=>{
-    const ok=answers[i]===x.a;
-    review+=`<div class="review-item ${ok?"correct":"wrong"}"><b>${i+1}. ${ok?"Правільна":"Памылка"}</b><br>${ok?"":"Правільны адказ: "+x.o[x.a]}</div>`;
-  });
-  document.getElementById("app").innerHTML=`<div class="result">
-    <h1>Тэст завершаны!</h1>
-    <div class="score">${score}/${questions.length}</div>
-    <p>${percent}% правільных адказаў</p><p class="small">${msg}</p>
-    <div class="review"><h2>Праверка адказаў</h2>${review}</div>
-    <button onclick="renderTest()">Прайсці яшчэ раз</button>
-  </div>`;
-  window.scrollTo({top:0,behavior:"smooth"});
+function showQuestion(){
+  locked=false;
+  const x=quiz[current];
+  const percent=((current)/quiz.length)*100;
+  document.getElementById("app").innerHTML=`
+    <div class="top">
+      <div class="badge">РАМАНТЫЗМ</div>
+      <div class="counter">${current+1} / ${quiz.length}</div>
+    </div>
+    <div class="progress"><div style="width:${percent}%"></div></div>
+    <h1>Праверка ведаў</h1>
+    <p class="question">${x.q}</p>
+    <div class="answers">
+      ${x.o.map((v,i)=>`<button class="answer" onclick="choose(${i})">${v}</button>`).join("")}
+    </div>
+    <button class="next" id="next" onclick="nextQuestion()">Наступнае пытанне →</button>
+  `;
 }
-renderTest();
+
+function choose(i){
+  if(locked)return;
+  locked=true;
+  const x=quiz[current];
+  const buttons=document.querySelectorAll(".answer");
+  buttons.forEach(b=>b.disabled=true);
+  if(i===x.a){score++;buttons[i].classList.add("correct")}
+  else {buttons[i].classList.add("wrong");buttons[x.a].classList.add("correct")}
+  document.getElementById("next").style.display="block";
+}
+
+function nextQuestion(){
+  current++;
+  if(current>=quiz.length) showResult();
+  else showQuestion();
+}
+
+function showResult(){
+  const percent=Math.round(score/quiz.length*100);
+  let msg=percent===100?"Выдатна! Усе адказы правільныя.":percent>=80?"Вельмі добры вынік!":percent>=60?"Добры вынік! Паўтары асноўныя паняцці і паспрабуй яшчэ раз.":"Паўтары матэрыял і паспрабуй яшчэ раз.";
+  document.getElementById("app").innerHTML=`
+    <div class="result">
+      <div class="badge">ТЭСТ ЗАВЕРШАНЫ</div>
+      <h2>Твой вынік</h2>
+      <div class="score">${score}/${quiz.length}</div>
+      <p>${percent}% правільных адказаў</p>
+      <p>${msg}</p>
+      <button class="restart" onclick="start()">↻ Прайсці яшчэ раз</button>
+    </div>
+  `;
+}
+start();
 </script>
 </body>
 </html>
