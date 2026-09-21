@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="be">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тэст па рамантызме</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#eef4ff,#f8f5ff);color:#202536}
+.container{max-width:850px;margin:0 auto;padding:28px 16px 50px}
+.card{background:#fff;border-radius:22px;padding:28px;box-shadow:0 10px 35px rgba(30,40,80,.12)}
+h1{margin-top:0;font-size:30px;line-height:1.2}
+.subtitle{color:#667085;margin-bottom:28px}
+.question{padding:20px 0;border-top:1px solid #e8eaf0}
+.question:first-of-type{border-top:0}
+.question h2{font-size:19px;margin:0 0 14px}
+label{display:block;border:1px solid #dfe3eb;border-radius:12px;padding:12px 14px;margin:9px 0;cursor:pointer;transition:.15s}
+label:hover{background:#f5f7ff;border-color:#8b9cff}
+label.selected{background:#eef1ff;border-color:#5267dc}
+input{margin-right:10px}
+button{width:100%;border:0;border-radius:14px;padding:15px;font-size:17px;font-weight:700;background:#4f63d8;color:white;cursor:pointer;margin-top:18px}
+button:hover{background:#4053c3}
+.result{text-align:center}
+.score{font-size:48px;font-weight:800;margin:15px 0}
+.small{color:#667085}
+.error{color:#b42318;margin-top:12px;font-weight:600}
+.progress{height:8px;background:#e9ecf5;border-radius:99px;overflow:hidden;margin:18px 0 25px}
+.progress div{height:100%;width:100%;background:#4f63d8}
+.review{text-align:left;margin-top:25px}
+.review-item{padding:14px;border-radius:12px;margin:10px 0;background:#f7f8fb}
+.correct{border-left:5px solid #2e9b63}
+.wrong{border-left:5px solid #c43d3d}
+@media(max-width:600px){.card{padding:20px}h1{font-size:24px}.question h2{font-size:17px}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="card" id="app"></div>
+</div>
+
+<script>
+const questions = [
+{q:"Дзе рамантызм як літаратурны напрамак сцвердзіў свае пазіцыі ў канцы XVIII стагоддзя?",o:["У Заходняй Еўропе","У Паўночнай Амерыцы","У Старажытнай Грэцыі","Толькі ў Беларусі"],a:0},
+{q:"З наступствамі якой падзеі звязваецца ўзнікненне рамантызму ў тэксце?",o:["Французскай рэвалюцыі","Прамысловай рэвалюцыі ў Англіі","Кастрычніцкай рэвалюцыі","Першай сусветнай вайны"],a:0},
+{q:"Што, паводле тэксту, адначасова з расчараваннем у выніках рэвалюцыі ўзнікла ў адносінах да магчымасцей чалавечага розуму?",o:["Расчараванне","Поўнае захапленне","Бязмежная ўпэўненасць","Абыякавасць"],a:0},
+{q:"Які прынцып быў супрацьпастаўлены рамантызмам рацыяналізму Асветніцтва?",o:["Ірацыяналізм","Рэалізм","Класіцызм","Сентыменталізм"],a:0},
+{q:"Што рамантызм прынёс у літаратуру як новы мастацкі метад?",o:["Прынцып індывідуальнасці і самабытнасці творчасці","Адмову ад пачуццяў","Толькі дакладнае апісанне фактаў","Адмову ад гісторыі"],a:0},
+{q:"Што з'яўляецца адной з характэрных рыс рамантызму паводле тэксту?",o:["Культ пачуццяў","Поўнае падпарадкаванне героя грамадству","Адмова ад фантазіі","Перавага толькі навуковай тэматыкі"],a:0},
+{q:"Да чаго рамантыкі праяўлялі асаблівую цікавасць?",o:["Да гісторыі і фальклору","Толькі да матэматыкі","Толькі да палітычных дакументаў","Да тэхнічных інструкцый"],a:0},
+{q:"Які твор Адама Міцкевіча названы ў тэксце як першая кніга паэзіі, выдадзеная ў Вільні?",o:["«Паэзія» (1822)","«Пан Тадэвуш»","«Крымскія санеты»","«Дзяды»"],a:0},
+{q:"Які твор Адама Міцкевіча названы прыкладам змагання з будзённасцю і імкнення да ідэалу?",o:["«Ода да маладосці»","«Пан Тадэвуш»","«Рыбка»","«Курган Марылі»"],a:0},
+{q:"Хто з названых у тэксце пісьменнікаў напісаў «Курган Марылі»?",o:["Ян Баршчэўскі","Вінцэнт Дунін-Марцінкевіч","Адам Міцкевіч","Ян Чачот"],a:0},
+{q:"Якія творы Яна Баршчэўскага згадваюцца ў тэксце?",o:["«Шляхціц Завальня» і «Рабункі мужыкоў»","«Пан Тадэвуш» і «Дзяды»","«Курган Марылі» і «Паўлінка»","«Людзі на балоце» і «Новая зямля»"],a:0},
+{q:"Хто стварыў паэму «Песенька» («Лірнік вясковы»)?",o:["Ян Чачот","Адам Міцкевіч","Ян Баршчэўскі","Вінцэнт Дунін-Марцінкевіч"],a:0},
+{q:"Які твор Вінцэнта Дуніна-Марцінкевіча названы ў тэксце?",o:["«Пінская шляхта»","«Дзяды»","«Крымскія санеты»","«Шляхціц Завальня»"],a:0},
+{q:"Які твор Адама Міцкевіча быў напісаны ў 1828 годзе і згадваецца ў тэксце?",o:["«Конрад Валенрод»","«Пан Тадэвуш»","«Ода да маладосці»","«Рыбка»"],a:0},
+{q:"Якая тэма асабліва звязана з рамантызмам у прыведзеным тэксце?",o:["Непрыманне будзённасці жыцця","Поўнае прыняцце будзённасці","Адмова ад індывідуальнасці","Адмова ад гістарычнай тэматыкі"],a:0}
+];
+
+function renderTest(){
+  let h=`<h1>Тэст: рамантызм у еўрапейскім і беларускім мастацтве слова</h1>
+  <p class="subtitle">15 пытанняў па матэрыяле падручніка. Выберыце адзін правільны адказ у кожным пытанні.</p>
+  <div class="progress"><div></div></div><form id="quiz">`;
+  questions.forEach((x,i)=>{
+    h+=`<div class="question"><h2>${i+1}. ${x.q}</h2>`;
+    x.o.forEach((op,j)=>{
+      h+=`<label><input type="radio" name="q${i}" value="${j}"> ${op}</label>`;
+    });
+    h+=`</div>`;
+  });
+  h+=`<button type="submit">Завяршыць тэст</button><div id="err" class="error"></div></form>`;
+  document.getElementById("app").innerHTML=h;
+  document.querySelectorAll("label").forEach(l=>{
+    l.addEventListener("click",()=> {
+      l.parentElement.querySelectorAll("label").forEach(x=>x.classList.remove("selected"));
+      l.classList.add("selected");
+    });
+  });
+  document.getElementById("quiz").addEventListener("submit", finish);
+}
+
+function finish(e){
+  e.preventDefault();
+  let score=0, answers=[];
+  for(let i=0;i<questions.length;i++){
+    const el=document.querySelector(`input[name="q${i}"]:checked`);
+    if(!el){
+      document.getElementById("err").textContent="Калі ласка, адкажыце на ўсе пытанні.";
+      document.querySelectorAll("input")[i*4]?.scrollIntoView({behavior:"smooth",block:"center"});
+      return;
+    }
+    const val=Number(el.value); answers.push(val);
+    if(val===questions[i].a) score++;
+  }
+  const percent=Math.round(score/questions.length*100);
+  let msg=percent===100?"Выдатны вынік!":percent>=80?"Вельмі добры вынік!":percent>=60?"Добры вынік. Можна яшчэ раз паўтарыць матэрыял.":"Паспрабуйце яшчэ раз і паўтарыце асноўныя паняцці.";
+  let review="";
+  questions.forEach((x,i)=>{
+    const ok=answers[i]===x.a;
+    review+=`<div class="review-item ${ok?"correct":"wrong"}"><b>${i+1}. ${ok?"Правільна":"Памылка"}</b><br>${ok?"":"Правільны адказ: "+x.o[x.a]}</div>`;
+  });
+  document.getElementById("app").innerHTML=`<div class="result">
+    <h1>Тэст завершаны!</h1>
+    <div class="score">${score}/${questions.length}</div>
+    <p>${percent}% правільных адказаў</p><p class="small">${msg}</p>
+    <div class="review"><h2>Праверка адказаў</h2>${review}</div>
+    <button onclick="renderTest()">Прайсці яшчэ раз</button>
+  </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+renderTest();
+</script>
+</body>
+</html>
